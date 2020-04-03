@@ -7,6 +7,7 @@ import com.nadeem.api.libraryapis.publisher.model.PublisherEntity;
 import com.nadeem.api.libraryapis.publisher.repository.PublisherRepository;
 import com.nadeem.api.libraryapis.utills.LibraryApiUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -77,4 +78,12 @@ public class PublisherService {
     }
 
 
+    public void deletePublisher(Integer publisherId) throws LibraryResourceNotFoundException {
+        try {
+            publisherRepository.deleteById(publisherId);
+        }catch (EmptyResultDataAccessException e){
+            throw new LibraryResourceNotFoundException("Publisher id " +publisherId+ " Not Found");
+        }
+
+    }
 }
