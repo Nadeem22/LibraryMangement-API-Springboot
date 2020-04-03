@@ -1,9 +1,17 @@
 package com.nadeem.api.libraryapis.publisher.model;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class Publisher {
 
     private Integer publisherId;
+    @Size(min = 1,max = 50, message = "Publisher must be between 1 to 50 character")
     private String name;
+    @Email(message = "Please Enter a valid email Id")
     private String emailId;
+    @Pattern(regexp = "\\d{3}-\\d{3}-\\d{3}", message = "Please enter phone number in format 123-456-789")
     private String phoneNumber;
 
     public Publisher() {
