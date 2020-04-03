@@ -41,7 +41,7 @@ public class PublisherService {
             addedPublisher = publisherRepository.save(publisherEntity);
         } catch (DataIntegrityViolationException e) {
             log.error("TraceId: {} ,Publisher already exists!! ", traceId,e);
-            throw new LibraryResourceAlreadyExistException("Trace ID :" +traceId+ ", Publisher already exists!!");
+            throw new LibraryResourceAlreadyExistException(traceId, " Publisher already exists!!");
         }
 
         publisherToBeAdded.setPublisherId(addedPublisher.getPublisherid());
@@ -57,7 +57,7 @@ public class PublisherService {
                     PublisherEntity pe=publisherEntity.get();
                     publisher=createPublisherFromEntity(pe);
            }else {
-               throw new LibraryResourceNotFoundException("Trace ID :" +traceId+ ", Publisher id" +publisherId+ "Not Found");
+               throw new LibraryResourceNotFoundException(traceId, " Publisher id" +publisherId+ "Not Found");
            }
            return publisher;
 
@@ -77,7 +77,7 @@ public class PublisherService {
             publisherRepository.save(pe);
             publisherTobeUpdated=createPublisherFromEntity(pe);
         }else {
-            throw new LibraryResourceNotFoundException("Trace ID :" +traceId+ ", Publisher id " +publisherTobeUpdated.getPublisherId()+ " Not Found");
+            throw new LibraryResourceNotFoundException(traceId," Publisher id " +publisherTobeUpdated.getPublisherId()+ " Not Found");
         }
     }
 
@@ -87,7 +87,8 @@ public class PublisherService {
         try {
             publisherRepository.deleteById(publisherId);
         }catch (EmptyResultDataAccessException e){
-            throw new LibraryResourceNotFoundException("Trace ID :" +traceId+ ", Publisher id " +publisherId+ " Not Found");
+            log.error("TraceIs: {}, Publisher Id {} Not Found: " , traceId,publisherId,e);
+            throw new LibraryResourceNotFoundException(traceId, " Publisher id " +publisherId+ " Not Found");
         }
 
     }
