@@ -1,6 +1,7 @@
 package com.nadeem.api.libraryapis.publisher.controller;
 
 import com.nadeem.api.libraryapis.exceptions.LibraryResourceAlreadyExistException;
+import com.nadeem.api.libraryapis.exceptions.LibraryResourceNotFoundException;
 import com.nadeem.api.libraryapis.publisher.model.Publisher;
 import com.nadeem.api.libraryapis.publisher.service.PublisherService;
 import org.springframework.http.HttpStatus;
@@ -18,14 +19,21 @@ public class PublisherController {
     }
 
     @GetMapping(path = "/{publisherId}")
-    public Publisher getPublisher(@PathVariable Integer publisherId) {
-        return new Publisher(publisherId, "nadeem", "nadeem@email.com", "123-456-789");
+    public ResponseEntity<?> getPublisher(@PathVariable Integer publisherId) {
+       Publisher publisher=null;
+       try {
+           publisher=  publisherService.getPublisher(publisherId);
+       }catch (LibraryResourceNotFoundException e){
+
+      return  new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+       }
+       return new ResponseEntity<>(publisher,HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> addPublisher(@RequestBody Publisher publisher) {
         try {
-            publisher = publisherService.addPublisher(publisher);
+             publisherService.addPublisher(publisher);
         } catch (LibraryResourceAlreadyExistException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
