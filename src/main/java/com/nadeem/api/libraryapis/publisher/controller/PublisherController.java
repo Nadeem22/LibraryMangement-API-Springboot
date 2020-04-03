@@ -5,6 +5,8 @@ import com.nadeem.api.libraryapis.exceptions.LibraryResourceNotFoundException;
 import com.nadeem.api.libraryapis.publisher.model.Publisher;
 import com.nadeem.api.libraryapis.publisher.service.PublisherService;
 import com.nadeem.api.libraryapis.utills.LibraryApiUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping(path = "/v1/publishers")
 public class PublisherController {
-
+    private static Logger logger = LoggerFactory.getLogger(PublisherController.class);
     private PublisherService publisherService;
 
     public PublisherController(PublisherService publisherService) {
@@ -39,15 +41,17 @@ public class PublisherController {
 
     @PostMapping
     public ResponseEntity<?> addPublisher(@Valid @RequestBody Publisher publisher, @RequestHeader(value = "Trace-Id",defaultValue = "") String traceId) {
+        logger.debug("Request to add Publisher: {}", publisher);
         if(!LibraryApiUtils.doesStringValueExist(traceId)){
             traceId= UUID.randomUUID().toString();
         }
+        logger.debug("Added TraceId: {}", traceId);
         try {
              publisherService.addPublisher(publisher,traceId);
         } catch (LibraryResourceAlreadyExistException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
-
+        logger.debug("Returning response for TraceId: {}", traceId);
         return new ResponseEntity<>(publisher, HttpStatus.CREATED);
     }
 

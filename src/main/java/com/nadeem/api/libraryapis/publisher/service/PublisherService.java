@@ -6,6 +6,8 @@ import com.nadeem.api.libraryapis.publisher.model.Publisher;
 import com.nadeem.api.libraryapis.publisher.model.PublisherEntity;
 import com.nadeem.api.libraryapis.publisher.repository.PublisherRepository;
 import com.nadeem.api.libraryapis.utills.LibraryApiUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class PublisherService {
-
+    private static Logger log= LoggerFactory.getLogger(PublisherService.class);
     private PublisherRepository publisherRepository;
 
     public PublisherService(PublisherRepository publisherRepository) {
@@ -26,7 +28,7 @@ public class PublisherService {
 
     public void addPublisher(Publisher publisherToBeAdded, String traceId)
             throws LibraryResourceAlreadyExistException {
-
+        log.debug("TraceIs: {}, Publisher added: {}" , traceId,publisherToBeAdded);
         PublisherEntity publisherEntity = new PublisherEntity(
                 publisherToBeAdded.getName(),
                 publisherToBeAdded.getEmailId(),
@@ -38,10 +40,12 @@ public class PublisherService {
         try {
             addedPublisher = publisherRepository.save(publisherEntity);
         } catch (DataIntegrityViolationException e) {
+            log.error("TraceId: {} ,Publisher already exists!! ", traceId,e);
             throw new LibraryResourceAlreadyExistException("Trace ID :" +traceId+ ", Publisher already exists!!");
         }
 
         publisherToBeAdded.setPublisherId(addedPublisher.getPublisherid());
+        log.info("TraceIs: {}, Publisher added: {}" , traceId,publisherToBeAdded);
 
     }
 
