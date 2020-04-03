@@ -5,6 +5,7 @@ import com.nadeem.api.libraryapis.exceptions.LibraryResourceNotFoundException;
 import com.nadeem.api.libraryapis.publisher.model.Publisher;
 import com.nadeem.api.libraryapis.publisher.model.PublisherEntity;
 import com.nadeem.api.libraryapis.publisher.repository.PublisherRepository;
+import com.nadeem.api.libraryapis.utills.LibraryApiUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -53,8 +54,27 @@ public class PublisherService {
            return publisher;
 
     }
+    public void updatePublisher(Publisher publisherTobeUpdated) throws LibraryResourceNotFoundException {
+        Optional<PublisherEntity>publisherEntity= publisherRepository.findById(publisherTobeUpdated.getPublisherId());
+        Publisher publisher=null;
 
+        if(publisherEntity.isPresent()){
+            PublisherEntity pe=publisherEntity.get();
+            if(LibraryApiUtils.doesStringValueExist(publisherTobeUpdated.getEmailId())){
+                  pe.setEmailId(publisherTobeUpdated.getEmailId());
+            }
+            if(LibraryApiUtils.doesStringValueExist(publisherTobeUpdated.getPhoneNumber())){
+                pe.setPhoneNumber(publisherTobeUpdated.getPhoneNumber());
+            }
+            publisherRepository.save(pe);
+            publisherTobeUpdated=createPublisherFromEntity(pe);
+        }else {
+            throw new LibraryResourceNotFoundException("Publisher id " +publisherTobeUpdated.getPublisherId()+ " Not Found");
+        }
+    }
     private Publisher createPublisherFromEntity(PublisherEntity pe) {
         return new Publisher(pe.getPublisherid(),pe.getName(),pe.getEmailId(),pe.getPhoneNumber());
     }
+
+
 }

@@ -40,5 +40,18 @@ public class PublisherController {
 
         return new ResponseEntity<>(publisher, HttpStatus.CREATED);
     }
+
+    @PutMapping(path = "/{publisherId}")
+    public ResponseEntity<?> getPublisher(@PathVariable Integer publisherId,@RequestBody  Publisher publisher) {
+
+        try {
+            publisher.setPublisherId(publisherId);
+             publisherService.updatePublisher(publisher);
+        }catch (LibraryResourceNotFoundException e){
+
+            return  new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(publisher,HttpStatus.OK);
+    }
 }
 
