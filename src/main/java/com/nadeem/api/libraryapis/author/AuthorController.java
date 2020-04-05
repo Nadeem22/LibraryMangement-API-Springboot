@@ -39,5 +39,14 @@ public class AuthorController {
         logger.debug("Returning response for TraceId: {}", traceId);
         return new ResponseEntity<>(author, HttpStatus.CREATED);
     }
+    @DeleteMapping("/{authorId}")
+    public ResponseEntity<?>deleteAuthor(@PathVariable Integer authorId, @RequestHeader(value = "Trace-Id",defaultValue = "")String traceId) throws LibraryResourceNotFoundException {
+        if(!LibraryApiUtils.doesStringValueExist(traceId)){
+            traceId=UUID.randomUUID().toString();
+        }
+        authorService.deleteAuthor(authorId,traceId);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
+    }
 
 }
