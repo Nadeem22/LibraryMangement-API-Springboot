@@ -5,6 +5,7 @@ import com.nadeem.api.libraryapis.exceptions.LibraryResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -47,5 +48,14 @@ public class AuthorService {
         }
         authorToBeAdded.setAuthorId(addedAuthor.getAuthorId());
         logger.info("Trace-Id : {}, Author added: {}",traceId,authorToBeAdded);
+    }
+
+    public void deleteAuthor(Integer authorId, String traceId) throws LibraryResourceNotFoundException {
+        try{
+            authorRepository.deleteById(authorId);
+        }catch (EmptyResultDataAccessException e){
+            logger.error("TraceId: {}, Author Id: {} Not Found", traceId, authorId, e);
+                throw  new LibraryResourceNotFoundException(traceId, "Author Id:" +authorId+ " Not found ");
+        }
     }
 }
