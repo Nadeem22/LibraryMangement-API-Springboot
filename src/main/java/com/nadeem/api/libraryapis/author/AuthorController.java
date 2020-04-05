@@ -1,5 +1,6 @@
 package com.nadeem.api.libraryapis.author;
 
+import com.nadeem.api.libraryapis.exceptions.LibraryResourceAlreadyExistException;
 import com.nadeem.api.libraryapis.exceptions.LibraryResourceNotFoundException;
 import com.nadeem.api.libraryapis.utills.LibraryApiUtils;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -25,7 +27,17 @@ public class AuthorController {
             traceId= UUID.randomUUID().toString();
         }
         return  new ResponseEntity<>(authorService.getAuthor(authorId,traceId), HttpStatus.OK);
-
+    }
+    @PostMapping
+    public ResponseEntity<?> addAuthor(@Valid @RequestBody Author author,@RequestHeader(value = "Trace-Id",defaultValue = "") String traceId) throws LibraryResourceAlreadyExistException {
+        logger.debug("Request to add Author : {}",author);
+        if(!LibraryApiUtils.doesStringValueExist(traceId)){
+            traceId=UUID.randomUUID().toString();
+        }
+        logger.debug("Trace-Id Added: {}", traceId );
+        authorService.addAuthor(author,traceId);
+        logger.debug("Returning response for TraceId: {}", traceId);
+        return new ResponseEntity<>(author, HttpStatus.CREATED);
     }
 
 }
