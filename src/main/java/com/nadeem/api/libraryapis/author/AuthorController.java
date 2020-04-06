@@ -48,5 +48,20 @@ public class AuthorController {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
     }
+    @PutMapping(path = "/{authorId}")
+    public ResponseEntity<?> updateAuthor(@PathVariable Integer authorId,
+                                          @Valid @RequestBody Author author,
+                                          @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId)
+            throws LibraryResourceNotFoundException {
+
+        if(!LibraryApiUtils.doesStringValueExist(traceId)) {
+            traceId = UUID.randomUUID().toString();
+        }
+
+        author.setAuthorId(authorId);
+        authorService.updateAuthor(author, traceId);
+
+        return new ResponseEntity<>(author, HttpStatus.OK);
+    }
 
 }
