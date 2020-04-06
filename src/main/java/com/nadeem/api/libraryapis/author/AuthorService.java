@@ -58,4 +58,27 @@ public class AuthorService {
                 throw  new LibraryResourceNotFoundException(traceId, "Author Id:" +authorId+ " Not found ");
         }
     }
+
+    public void updateAuthor(Author authorToBeUpdated, String traceId) throws LibraryResourceNotFoundException {
+
+        Optional<AuthorEntity> authorEntity = authorRepository.findById(authorToBeUpdated.getAuthorId());
+        Author author = null;
+
+        if(authorEntity.isPresent()) {
+
+            AuthorEntity ae = authorEntity.get();
+            logger.info("Author FirstName: {},Author Last name: {}, Author Id: {}", ae.getFirstName(),ae.getLastName(),ae.getAuthorId());
+            if(authorToBeUpdated.getDateOfBirth() != null) {
+                ae.setDateOfBirth(authorToBeUpdated.getDateOfBirth());
+            }
+            if(authorToBeUpdated.getGender() != null) {
+                ae.setGender(authorToBeUpdated.getGender());
+            }
+            authorRepository.save(ae);
+            authorToBeUpdated = createAuthorFromEntity(ae);
+        } else {
+            throw new LibraryResourceNotFoundException(traceId, "Author Id: " + authorToBeUpdated.getAuthorId() + " Not Found");
+        }
+
+    }
 }
