@@ -2,13 +2,17 @@ package com.nadeem.api.libraryapis.author;
 
 import com.nadeem.api.libraryapis.exceptions.LibraryResourceAlreadyExistException;
 import com.nadeem.api.libraryapis.exceptions.LibraryResourceNotFoundException;
+import com.nadeem.api.libraryapis.utills.LibraryApiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
@@ -31,10 +35,7 @@ public class AuthorService {
           return author;
     }
 
-    private Author createAuthorFromEntity(AuthorEntity ae) {
 
-        return new Author(ae.getAuthorId(),ae.getFirstName(),ae.getLastName(),ae.getDateOfBirth(),ae.getGender());
-    }
 
     public void addAuthor(Author authorToBeAdded, String traceId) throws LibraryResourceAlreadyExistException {
         logger.debug("Trace-Id: {},Request to add Author: {} ",traceId, authorToBeAdded);
@@ -80,5 +81,31 @@ public class AuthorService {
             throw new LibraryResourceNotFoundException(traceId, "Author Id: " + authorToBeUpdated.getAuthorId() + " Not Found");
         }
 
+    }
+
+    public List<Author> searchAuthor(String firstName, String lastName, String traceId) {
+
+        List<AuthorEntity> authorEntities = null;
+        if(LibraryApiUtils.doesStringValueExist(firstName) && LibraryApiUtils.doesStringValueExist(lastName)) {
+            authorEntities = authorRepository.findByFirstNameAndLastNameContaining(firstName, lastName);
+        } else if(LibraryApiUtils.doesStringValueExist(firstName) && !LibraryApiUtils.doesStringValueExist(lastName)) {
+            authorEntities = authorRepository.findByFirstNameContaining(firstName);
+        } else if(!LibraryApiUtils.doesStringValueExist(firstName) && LibraryApiUtils.doesStringValueExist(lastName)) {
+            authorEntities = authorRepository.findByLastNameContaining(lastName);
+        }
+        if(authorEntities != null && authorEntities.size() > 0) {
+            return createAuthorsForSearchResponse(authorEntities);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+    private Author createAuthorFromEntity(AuthorEntity ae) {
+
+        return new Author(ae.getAuthorId(),ae.getFirstName(),ae.getLastName(),ae.getDateOfBirth(),ae.getGender());
+    }
+    private List<Author> createAuthorsForSearchResponse(List<AuthorEntity> authorEntities) {
+        return authorEntities.stream()
+                .map(ae -> new Author(ae.getAuthorId(), ae.getFirstName(), ae.getLastName(), ae.getDateOfBirth(), ae.getGender()))
+                .collect(Collectors.toList());
     }
 }

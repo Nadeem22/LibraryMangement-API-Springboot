@@ -3,6 +3,7 @@ package com.nadeem.api.libraryapis.author;
 import com.nadeem.api.libraryapis.model.common.Gender;
 
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
@@ -18,6 +19,7 @@ public class Author {
     @Size(min = 1,max = 50,message = "Last Name must be between 1 and 50 character")
     private String lastName;
     @Past(message = "Date of birth must be past date")
+
     private LocalDate  dateOfBirth;
     private Gender gender;
 

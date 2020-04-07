@@ -14,7 +14,7 @@ public class AuthorEntity {
     private int authorId;
     @Column(name = "First_Name")
     private String firstName;
-    @Column(name = "Last_Name")
+    @Column(name = "Last_Name" )
     private String lastName;
     @Column(name = "Date_Of_Birth")
     private LocalDate  dateOfBirth;
