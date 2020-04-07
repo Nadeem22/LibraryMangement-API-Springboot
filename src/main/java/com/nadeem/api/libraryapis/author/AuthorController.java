@@ -1,6 +1,7 @@
 package com.nadeem.api.libraryapis.author;
 
 import com.nadeem.api.libraryapis.exceptions.LibraryResourceAlreadyExistException;
+import com.nadeem.api.libraryapis.exceptions.LibraryResourceBadRequestException;
 import com.nadeem.api.libraryapis.exceptions.LibraryResourceNotFoundException;
 import com.nadeem.api.libraryapis.utills.LibraryApiUtils;
 import org.slf4j.Logger;
@@ -62,6 +63,23 @@ public class AuthorController {
         authorService.updateAuthor(author, traceId);
 
         return new ResponseEntity<>(author, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/search")
+    public ResponseEntity<?> searchAuthor(@RequestParam String firstName, @RequestParam String lastName,
+                                          @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId)
+            throws LibraryResourceBadRequestException {
+
+        if(!LibraryApiUtils.doesStringValueExist(traceId)) {
+            traceId = UUID.randomUUID().toString();
+        }
+
+        if(!LibraryApiUtils.doesStringValueExist(firstName) && !LibraryApiUtils.doesStringValueExist(lastName)) {
+            logger.error("TraceId: {}, Please enter at least one search criteria to search Authors!!", traceId);
+            throw new LibraryResourceBadRequestException(traceId, "Please enter a name to search Author.");
+        }
+
+        return new ResponseEntity<>(authorService.searchAuthor(firstName, lastName, traceId), HttpStatus.OK);
     }
 
 }
