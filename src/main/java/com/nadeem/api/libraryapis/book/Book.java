@@ -1,44 +1,77 @@
 package com.nadeem.api.libraryapis.book;
-
 import com.nadeem.api.libraryapis.author.Author;
 
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import javax.validation.constraints.NotNull;
+
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Book {
-    private Integer BookId;
-    @NotNull
-    @Size(min=1,max = 50, message = "ISBN must be 1 to 50 character")
-    private String isbn;
-    @Size(min = 1, max = 50, message = "Title must be 1 to 50 character")
-    private String title;
-    private Integer publisherId;
-    private Integer yearPublished;
-    @Size(min = 1, max = 50, message = "Edition must be 1 to 50 character")
-    private  String edition;
-    private BookStatus bookStatus;
-    private Set<Author> author=new HashSet<>();
 
-    public Book(Integer bookId,  String isbn,  String title, Integer publisherId, Integer yearPublished, String edition, BookStatus bookStatus, Set<Author> author) {
-        BookId = bookId;
+    private Integer bookId;
+
+    @NotNull
+    @Size(min = 1, max = 50, message = "ISBN name must be between 1 and 50 characters")
+    private String isbn;
+
+    @Size(min = 1, max = 50, message = "Title name must be between 1 and 50 characters")
+    private String title;
+
+    private Integer publisherId;
+
+    private Integer yearPublished;
+
+    @Size(min = 1, max = 20, message = "Edition name must be between 1 and 50 characters")
+    private String edition;
+    private BookStatus bookStatus;
+
+
+    private Set<Author> authors = new HashSet<>();
+
+    public Book() {
+    }
+
+    public Book(Integer bookId,
+                String isbn, String title, Integer publisherId, Integer yearPublished, String edition,BookStatus  bookStatus, Set<Author> authors) {
+        this.bookId = bookId;
         this.isbn = isbn;
         this.title = title;
         this.publisherId = publisherId;
         this.yearPublished = yearPublished;
         this.edition = edition;
         this.bookStatus = bookStatus;
-        this.author = author;
+        this.authors = authors;
+    }
+
+    public Book(int bookId, String isbn, String title, int publisherid, int yearPublished, String edition,
+                BookStatus bookStatus) {
+        this.bookId = bookId;
+        this.isbn = isbn;
+        this.title = title;
+        this.publisherId = publisherId;
+        this.yearPublished = yearPublished;
+        this.edition = edition;
+        this.bookStatus = bookStatus;
+    }
+
+    public Book(String isbn, String title, Integer publisherId, int yearPublished, String edition, BookStatus bookStatus) {
+        this.isbn = isbn;
+        this.title = title;
+        this.publisherId = publisherId;
+        this.yearPublished = yearPublished;
+        this.edition = edition;
+        this.bookStatus = bookStatus;
     }
 
     public Integer getBookId() {
-        return BookId;
+        return bookId;
     }
 
     public void setBookId(Integer bookId) {
-        BookId = bookId;
+        this.bookId = bookId;
     }
 
     public String getIsbn() {
@@ -89,11 +122,11 @@ public class Book {
         this.bookStatus = bookStatus;
     }
 
-    public Set<Author> getAuthor() {
-        return author;
+    public Set<Author> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(Set<Author> author) {
-        this.author = author;
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
     }
 }

@@ -1,8 +1,9 @@
 package com.nadeem.api.libraryapis.book;
 
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BookStatusRepository extends CrudRepository<BookStatusEntity,Integer> {
+public interface BookStatusRepository extends CrudRepository<BookStatusEntity, Integer> {
 }

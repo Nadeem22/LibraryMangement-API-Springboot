@@ -3,7 +3,7 @@ package com.nadeem.api.libraryapis.author;
 import com.nadeem.api.libraryapis.model.common.Gender;
 
 
-import javax.persistence.Column;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
@@ -33,6 +33,13 @@ public class Author {
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+    }
+
+    public Author(Integer authorId, String firstName, String lastName) {
+        this.authorId = authorId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+
     }
 
     public Integer getAuthorId() {

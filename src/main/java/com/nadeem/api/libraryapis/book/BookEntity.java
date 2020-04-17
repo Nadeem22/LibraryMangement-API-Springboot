@@ -1,6 +1,5 @@
 package com.nadeem.api.libraryapis.book;
 
-
 import com.nadeem.api.libraryapis.author.AuthorEntity;
 import com.nadeem.api.libraryapis.publisher.model.PublisherEntity;
 
@@ -31,18 +30,18 @@ public class BookEntity {
     private String edition;
 
     @ManyToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+                cascade = CascadeType.ALL)
     @JoinColumn(name = "Publisher_Id",
-            nullable = false)
+                nullable = false)
     private PublisherEntity publisher;
 
     @OneToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            mappedBy = "bookEntity")
+              cascade = CascadeType.ALL,
+                mappedBy = "bookEntity")
     private BookStatusEntity bookStatus;
 
     @ManyToMany(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+                cascade = CascadeType.ALL)
     @JoinTable(name = "book_author", joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<AuthorEntity> authors = new HashSet<>();

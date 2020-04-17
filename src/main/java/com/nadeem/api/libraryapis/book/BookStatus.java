@@ -1,33 +1,40 @@
 package com.nadeem.api.libraryapis.book;
-
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
 import javax.validation.constraints.Pattern;
 
 public class BookStatus {
 
-    private int bookid;
+    private Integer bookId;
 
     private BookStatusState state;
+
     @Pattern(regexp = "[1-9][0-9]")
-    private int totlaNumberOfCopies;
+    private int totalNumberOfCopies;
+
     @Pattern(regexp = "[1-9][0-9]")
     private int numberOfCopiesIssued;
 
-    public BookStatus(BookStatusState state,  int totlaNumberOfCopies,  int numberOfCopiesIssued) {
+    public BookStatus() {
+    }
+
+    public BookStatus(BookStatusState state, int totalNumberOfCopies, int numberOfCopiesIssued) {
         this.state = state;
-        this.totlaNumberOfCopies = totlaNumberOfCopies;
+        this.totalNumberOfCopies = totalNumberOfCopies;
         this.numberOfCopiesIssued = numberOfCopiesIssued;
     }
 
-    public int getBookid() {
-        return bookid;
+    public BookStatus(int bookId, BookStatusState state, int totalNumberOfCopies, int numberOfCopiesIssued) {
+        this.bookId = bookId;
+        this.state = state;
+        this.totalNumberOfCopies = totalNumberOfCopies;
+        this.numberOfCopiesIssued = numberOfCopiesIssued;
     }
 
-    public void setBookid(int bookid) {
-        this.bookid = bookid;
+    public Integer getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 
     public BookStatusState getState() {
@@ -38,12 +45,12 @@ public class BookStatus {
         this.state = state;
     }
 
-    public int getTotlaNumberOfCopies() {
-        return totlaNumberOfCopies;
+    public int getTotalNumberOfCopies() {
+        return totalNumberOfCopies;
     }
 
-    public void setTotlaNumberOfCopies(int totlaNumberOfCopies) {
-        this.totlaNumberOfCopies = totlaNumberOfCopies;
+    public void setTotalNumberOfCopies(int totalNumberOfCopies) {
+        this.totalNumberOfCopies = totalNumberOfCopies;
     }
 
     public int getNumberOfCopiesIssued() {
